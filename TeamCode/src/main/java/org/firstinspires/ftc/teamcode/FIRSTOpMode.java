@@ -12,7 +12,6 @@ public class FIRSTOpMode extends LinearOpMode {
     private DcMotor leftMotor;
     private DcMotor rightMotor;
 
-    private DcMotor motorTest;
     private ElapsedTime time = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -26,32 +25,8 @@ public class FIRSTOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
-        motorTest = hardwareMap.get(DcMotor.class, "rightMotor");
-        waitForStart();
-        DcMotorSimple.Direction dir = DcMotorSimple.Direction.FORWARD;
-        leftMotor.setDirection(dir);
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftMotor.setPower(1);
-        motorTest.setDirection(dir);
-        motorTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorTest.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorTest.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorTest.setPower(1);
-        while (opModeIsActive()){
-            if (time.milliseconds()>5000){
-                time.reset();
-                telemetry.addData("Direction Change", "Time of change: " + time.toString());
-                leftMotor.setPower((leftMotor.getPower()*-1));
-                motorTest.setPower((motorTest.getPower()*-1));
-            }
-            telemetry.addData("Status", "power: " + leftMotor.getPower());
-            telemetry.addData("Status", "power: " + motorTest.getPower());
-            telemetry.update();
-        }
-        leftMotor.setPower(0);
+        leftMotor = hardwareMap.get(DcMotor.class, "motor1");
+        rightMotor = hardwareMap.get(DcMotor.class, "motor2");
     }
 
     public void encoderDrive(double speed,
@@ -106,6 +81,5 @@ public class FIRSTOpMode extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
-        motorTest.setPower(0);
     }
 }
