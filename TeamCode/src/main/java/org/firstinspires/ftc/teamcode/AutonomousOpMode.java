@@ -13,7 +13,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class AutonomousOpMode extends LinearOpMode {
     private DcMotor leftMotor;
     private DcMotor rightMotor;
-    private DcMotor armMotor;
+    private DcMotor armMotor; // gear ratio is 6 : 1
+
+    private final double    ARM_REDUCTION = 6.0;
+    private final double    ARM_COUNTS_PER_REVOLUTION = ARM_REDUCTION * COUNTS_PER_MOTOR_REV;
+
     private Servo handServo;
 
     private ElapsedTime time = new ElapsedTime();
@@ -22,7 +26,7 @@ public class AutonomousOpMode extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 3.1415);                   // counts per revolution over circumference
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
@@ -36,12 +40,41 @@ public class AutonomousOpMode extends LinearOpMode {
 
         //start of autonomous period
 
-        
+        // spin arm 1/2 way
+
+        moveByRotation(TURN_SPEED, armMotor, .5, ARM_COUNTS_PER_REVOLUTION, 4.0);
+
         //encoderDrive();
 
     }
 
+    public void moveByRotation(double speed, DcMotor motor, double rotations, double countsPerRotation, double timeoutS){
+        int target;
 
+        if (opModeIsActive()){
+            target = motor.getCurrentPosition() + (int)(rotations * countsPerRotation);
+            motor.setTargetPosition(target);
+
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            time.reset();
+            motor.setPower(Math.abs(speed));
+
+            while (opModeIsActive() &&
+                    (time.seconds() < timeoutS) &&
+                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("armP1",  "Running to %7d", target);
+                telemetry.addData("armP2",  "Running at %7d", motor.getCurrentPosition());
+                telemetry.update();
+            }
+
+            motor.setPower(0);
+
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
 
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
