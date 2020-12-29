@@ -9,8 +9,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name="testOpmode", group="Memorial")
 
 public class FIRSTOpMode extends LinearOpMode {
-    private DcMotor leftMotor;
-    private DcMotor rightMotor;
+    private DcMotor motor1;
+    private DcMotor motor2;
+    private DcMotor motorTest;
     private ElapsedTime time = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -24,29 +25,32 @@ public class FIRSTOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-
-
-        /*
-        leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
+        motor1 = hardwareMap.get(DcMotor.class, "motor1");
+        motorTest = hardwareMap.get(DcMotor.class, "motor2");
         waitForStart();
         DcMotorSimple.Direction dir = DcMotorSimple.Direction.FORWARD;
-        leftMotor.setDirection(dir);
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftMotor.setPower(1);
+        motor1.setDirection(dir);
+        motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor1.setPower(1);
+        motorTest.setDirection(dir);
+        motorTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorTest.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorTest.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorTest.setPower(1);
         while (opModeIsActive()){
             if (time.milliseconds()>5000){
                 time.reset();
                 telemetry.addData("Direction Change", "Time of change: " + time.toString());
-                leftMotor.setPower((leftMotor.getPower()*-1));
+                motor1.setPower((motor1.getPower()*-1));
+                motorTest.setPower((motorTest.getPower()*-1));
             }
-            telemetry.addData("Status", "power: " + leftMotor.getPower());
+            telemetry.addData("Status", "power: " + motor1.getPower());
+            telemetry.addData("Status", "power: " + motorTest.getPower());
             telemetry.update();
         }
-        leftMotor.setPower(0);
-        */
+        motor1.setPower(0);
     }
 
     public void encoderDrive(double speed,
@@ -59,19 +63,19 @@ public class FIRSTOpMode extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = leftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = rightMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            leftMotor.setTargetPosition(newLeftTarget);
-            rightMotor.setTargetPosition(newRightTarget);
+            newLeftTarget = motor1.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget = motor2.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            motor1.setTargetPosition(newLeftTarget);
+            motor2.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
-            leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             time.reset();
-            leftMotor.setPower(Math.abs(speed));
-            rightMotor.setPower(Math.abs(speed));
+            motor1.setPower(Math.abs(speed));
+            motor2.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -81,25 +85,26 @@ public class FIRSTOpMode extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (time.seconds() < timeoutS) &&
-                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+                    (motor1.isBusy() && motor2.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                        leftMotor.getCurrentPosition(),
-                        rightMotor.getCurrentPosition());
+                        motor1.getCurrentPosition(),
+                        motor2.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
+            motor1.setPower(0);
+            motor2.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
         }
+        motorTest.setPower(0);
     }
 }
