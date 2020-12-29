@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="testOpmode", group="Memorial")
@@ -11,6 +13,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class AutonomousOpMode extends LinearOpMode {
     private DcMotor leftMotor;
     private DcMotor rightMotor;
+    private DcMotor armMotor;
+    private Servo handServo;
 
     private ElapsedTime time = new ElapsedTime();
 
@@ -27,12 +31,16 @@ public class AutonomousOpMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         leftMotor = hardwareMap.get(DcMotor.class, "motor1");
         rightMotor = hardwareMap.get(DcMotor.class, "motor2");
+        armMotor = hardwareMap.get(DcMotor.class, "motor3");
+        handServo = hardwareMap.get(Servo.class, "servo1");
 
         //start of autonomous period
 
-
+        //encoderDrive();
 
     }
+
+
 
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
