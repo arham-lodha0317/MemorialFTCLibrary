@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="testOpmode", group="Memorial")
 
-public class FIRSTOpMode extends LinearOpMode {
+public class AutonomousOpMode extends LinearOpMode {
     private DcMotor leftMotor;
     private DcMotor rightMotor;
 
@@ -27,6 +27,11 @@ public class FIRSTOpMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         leftMotor = hardwareMap.get(DcMotor.class, "motor1");
         rightMotor = hardwareMap.get(DcMotor.class, "motor2");
+
+        //start of autonomous period
+
+
+
     }
 
     public void encoderDrive(double speed,
