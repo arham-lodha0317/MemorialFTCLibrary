@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 public class PlayerOpMode extends LinearOpMode {
     private DcMotor leftMotor;
@@ -29,11 +30,11 @@ public class PlayerOpMode extends LinearOpMode {
         armMotor = hardwareMap.get(DcMotor.class, "motor3");
         handServo = hardwareMap.get(Servo.class, "servo1");
 
-        //start of autonomous period
 
-
-        //encoderDrive();
-
+        while (opModeIsActive()) {
+            speedEncoder(gamepad1.left_stick_y, gamepad1.left_stick_x);
+            arm(Range.clip(gamepad1.left_trigger-gamepad1.right_trigger, -1.0, 1.0));
+        }
 
 
 
@@ -93,5 +94,28 @@ public class PlayerOpMode extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
+    }
+
+    public void speedEncoder(double y, double x){
+        double drive = y;
+        double turn  = x;
+
+        double leftPower = Range.clip(drive + turn, -1.0, 1.0);
+        double rightPower = Range.clip(drive - turn, -1.0, 1.0);
+
+        leftMotor.setPower(leftPower);
+        rightMotor.setPower(rightPower);
+
+        telemetry.addData("Status", "Run Time: " + time.toString());
+        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        telemetry.update();
+    }
+
+    public void arm(double power){
+        armMotor.setPower(power);
+
+        telemetry.addData("Status", "Run Time: " + time.toString());
+        telemetry.addData("Motors", "arm (%.2f)", power);
+        telemetry.update();
     }
 }
