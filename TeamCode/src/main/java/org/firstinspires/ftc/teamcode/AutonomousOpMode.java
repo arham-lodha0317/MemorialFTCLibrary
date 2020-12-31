@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="testOpmode", group="Memorial")
+@TeleOp(name="Autonomous", group="Memorial")
 
 public class AutonomousOpMode extends LinearOpMode {
     private DcMotor leftMotor;
@@ -33,17 +33,17 @@ public class AutonomousOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        leftMotor = hardwareMap.get(DcMotor.class, "motor1");
-        rightMotor = hardwareMap.get(DcMotor.class, "motor2");
-        armMotor = hardwareMap.get(DcMotor.class, "motor3");
-        handServo = hardwareMap.get(Servo.class, "servo1");
+        leftMotor = hardwareMap.get(DcMotor.class, "motor0");
+        rightMotor = hardwareMap.get(DcMotor.class, "motor1");
+        armMotor = hardwareMap.get(DcMotor.class, "motor2");
+        handServo = hardwareMap.get(Servo.class, "servo0");
 
         //start of autonomous period
-
+        waitForStart();
         // spin arm 1/2 way
-
-        moveByRotation(TURN_SPEED, armMotor, .5, ARM_COUNTS_PER_REVOLUTION, 4.0);
-
+        while (opModeIsActive()) {
+            moveByRotation(TURN_SPEED, armMotor, .5, ARM_COUNTS_PER_REVOLUTION, 4.0);
+        }
         //encoderDrive();
 
     }

@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+@TeleOp(name="Player", group="Memorial")
+
 
 public class PlayerOpMode extends LinearOpMode {
     private DcMotor leftMotor;
@@ -25,11 +29,17 @@ public class PlayerOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        leftMotor = hardwareMap.get(DcMotor.class, "motor1");
-        rightMotor = hardwareMap.get(DcMotor.class, "motor2");
-        armMotor = hardwareMap.get(DcMotor.class, "motor3");
-        handServo = hardwareMap.get(Servo.class, "servo1");
 
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        leftMotor = hardwareMap.get(DcMotor.class, "motor0");
+        rightMotor = hardwareMap.get(DcMotor.class, "motor1");
+        armMotor = hardwareMap.get(DcMotor.class, "motor2");
+        handServo = hardwareMap.get(Servo.class, "servo0");
+
+        waitForStart();
+        time.reset();
 
         while (opModeIsActive()) {
             speedEncoder(gamepad1.left_stick_y, gamepad1.left_stick_x);
