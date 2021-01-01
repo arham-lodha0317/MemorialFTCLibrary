@@ -42,7 +42,7 @@ public class PlayerOpMode extends LinearOpMode {
         time.reset();
 
         while (opModeIsActive()) {
-            speedEncoder(gamepad1.left_stick_y, gamepad1.left_stick_x);
+            speedEncoder(-gamepad1.left_stick_y, gamepad1.right_stick_x);
             arm(Range.clip(gamepad1.left_trigger-gamepad1.right_trigger, -1.0, 1.0));
         }
 
@@ -106,12 +106,10 @@ public class PlayerOpMode extends LinearOpMode {
         }
     }
 
-    public void speedEncoder(double y, double x){
-        double drive = y;
-        double turn  = x;
+    public void speedEncoder(double x, double y){
 
-        double leftPower = Range.clip(drive + turn, -1.0, 1.0);
-        double rightPower = Range.clip(drive - turn, -1.0, 1.0);
+        double leftPower = Range.clip(y + x, -1.0, 1.0);
+        double rightPower = Range.clip(y - x, -1.0, 1.0);
 
         leftMotor.setPower(leftPower);
         rightMotor.setPower(rightPower);

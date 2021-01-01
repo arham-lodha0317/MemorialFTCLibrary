@@ -42,7 +42,8 @@ public class AutonomousOpMode extends LinearOpMode {
         waitForStart();
         // spin arm 1/2 way
         while (opModeIsActive()) {
-            moveByRotation(TURN_SPEED, armMotor, .5, ARM_COUNTS_PER_REVOLUTION, 4.0);
+            moveByRotation(TURN_SPEED, armMotor, 5, ARM_COUNTS_PER_REVOLUTION, 10.0);
+            break;
         }
         //encoderDrive();
 
