@@ -15,7 +15,7 @@ public class AutonomousOpMode extends LinearOpMode {
     private DcMotor rightMotor;
     private DcMotor armMotor; // gear ratio is 6 : 1
 
-    private final double    ARM_REDUCTION = 6.0;
+    private final double    ARM_REDUCTION = .15;
     private final double    ARM_COUNTS_PER_REVOLUTION = ARM_REDUCTION * COUNTS_PER_MOTOR_REV;
 
     private Servo handServo;
