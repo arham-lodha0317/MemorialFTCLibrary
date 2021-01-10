@@ -14,7 +14,16 @@ class ShooterTester extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         shooter = hardwareMap.get(DcMotor.class, "motor0");
-
+        // speed is double from -1.0 to +1.0
+        activateMotorByDirection(shooter, 1.0);
 
     }
+
+    public void activateMotorByDirection(DcMotor motor, double dirSpeed){
+
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setPower(dirSpeed);
+    }
+
+
 }
