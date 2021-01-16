@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="ShooterTester", group="Memorial")
 
@@ -15,7 +16,7 @@ public class ShooterTester extends LinearOpMode {
 
         waitForStart();
 
-        shooter = hardwareMap.get(DcMotor.class, "motor0");
+        shooter = hardwareMap.get(DcMotor.class, "motor");
         // speed is double from -1.0 to +1.0
         while (opModeIsActive()){
             activateMotorByDirection(shooter, -1.0);
