@@ -50,6 +50,10 @@ public class AutonomousOpMode extends LinearOpMode {
 
     }
 
+    public void moveServo(Servo servo, boolean openClos){
+        //make code
+    }
+
     public void moveByRotation(double speed, DcMotor motor, double rotations, double timeoutS){
         int target;
 
