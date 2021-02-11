@@ -25,7 +25,6 @@ public class ShooterTester extends LinearOpMode {
     }
 
     public void activateMotorByDirection(DcMotor motor, double dirSpeed){
-
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setPower(dirSpeed);
     }

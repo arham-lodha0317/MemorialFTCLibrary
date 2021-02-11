@@ -42,18 +42,19 @@ public class AutonomousOpMode extends LinearOpMode {
         waitForStart();
         // spin arm 1/2 way
         while (opModeIsActive()) {
-            moveByRotation(TURN_SPEED, armMotor, 5, ARM_COUNTS_PER_REVOLUTION, 10.0);
+            moveByRotation(TURN_SPEED, armMotor, .25, 10.0);
+            moveByRotation(TURN_SPEED, armMotor, -.25, 10.0);
             break;
         }
         //encoderDrive();
 
     }
 
-    public void moveByRotation(double speed, DcMotor motor, double rotations, double countsPerRotation, double timeoutS){
+    public void moveByRotation(double speed, DcMotor motor, double rotations, double timeoutS){
         int target;
 
         if (opModeIsActive()){
-            target = motor.getCurrentPosition() + (int)(rotations * countsPerRotation);
+            target = motor.getCurrentPosition() + (int)(rotations * ARM_COUNTS_PER_REVOLUTION);
             motor.setTargetPosition(target);
 
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
