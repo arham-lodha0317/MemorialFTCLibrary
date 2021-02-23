@@ -29,28 +29,31 @@ public class AutonomousOpMode extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);                   // counts per revolution over circumference
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+    static final double     REST_POSITION           = 0;
+    static final double     HOLD_POSITION           = 1288;
+    static final double     GRAB_POSITION           = 4288;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        leftMotor = hardwareMap.get(DcMotor.class, "motor0");
-        rightMotor = hardwareMap.get(DcMotor.class, "motor1");
-        armMotor = hardwareMap.get(DcMotor.class, "motor2");
+        leftMotor = hardwareMap.get(DcMotor.class, "motor1");
+        rightMotor = hardwareMap.get(DcMotor.class, "motor2");
+        armMotor = hardwareMap.get(DcMotor.class, "motor0");
         handServo = hardwareMap.get(Servo.class, "servo0");
 
         //start of autonomous period
         waitForStart();
         // spin arm 1/2 way
         while (opModeIsActive()) {
-            moveByRotation(TURN_SPEED, armMotor, .25, 10.0);
-            moveByRotation(TURN_SPEED, armMotor, -.25, 10.0);
+//            moveByRotation(TURN_SPEED, armMotor, 1, 10.0);
+            moveByRotation(TURN_SPEED, armMotor, -1, 10.0);
             break;
         }
         //encoderDrive();
 
     }
 
-    public void moveServo(Servo servo, boolean openClos){
+    public void moveServo(Servo servo, boolean openClose){
         //make code
     }
 
