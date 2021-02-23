@@ -85,6 +85,30 @@ public class AutonomousOpMode extends LinearOpMode {
         }
     }
 
+    public void moveToPosition(DcMotor motor, double speed, int toPosition, double timeoutS){
+        if(opModeIsActive()){
+            motor.setTargetPosition(toPosition);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            time.reset();
+            motor.setPower(Math.abs(speed));
+
+            while (opModeIsActive() &&
+                    (time.seconds() < timeoutS) &&
+                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("armP1",  "Running to %7d", toPosition);
+                telemetry.addData("armP2",  "Running at %7d", motor.getCurrentPosition());
+                telemetry.update();
+            }
+
+            motor.setPower(0);
+
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
