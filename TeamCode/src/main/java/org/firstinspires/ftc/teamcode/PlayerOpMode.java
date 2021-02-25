@@ -92,8 +92,8 @@ public class PlayerOpMode extends LinearOpMode {
         }
     }
 
-    public void moveServo(Servo servo, boolean openClose){
-        //make code
+    public void moveServo(Servo servo, double openClose){
+        servo.setPosition(openClose);
     }
 
     public void moveToPosition(DcMotor motor, double speed, int toPosition, double timeoutS){

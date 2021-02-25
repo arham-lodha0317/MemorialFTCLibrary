@@ -53,8 +53,8 @@ public class AutonomousOpMode extends LinearOpMode {
 
     }
 
-    public void moveServo(Servo servo, boolean openClose){
-        //make code
+    public void moveServo(Servo servo, double openClose){
+        servo.setPosition(openClose);
     }
 
     public void moveByRotation(double speed, DcMotor motor, double rotations, double timeoutS){
