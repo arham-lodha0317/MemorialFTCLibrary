@@ -83,11 +83,7 @@ public class PlayerOpMode extends LinearOpMode {
                 //Set m position to 0
             }
         }
-
-
-
     }
-
 
     public void moveByRotation(double speed, DcMotor motor, double rotations){
         int target;
@@ -178,16 +174,8 @@ public class PlayerOpMode extends LinearOpMode {
         leftMotor.setPower(leftPower);
         rightMotor.setPower(rightPower);
 
-        //telemetry.addData("Status", "Run Time: " + time.toString());
-        //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-        //telemetry.update();
-    }
-
-    public void arm(double power){
-        armMotor.setPower(power);
-
-        //telemetry.addData("Status", "Run Time: " + time.toString());
-        //telemetry.addData("Motors", "arm (%.2f)", power);
-        //telemetry.update();
+        telemetry.addData("Status", "Run Time: " + time.toString());
+        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        telemetry.update();
     }
 }
