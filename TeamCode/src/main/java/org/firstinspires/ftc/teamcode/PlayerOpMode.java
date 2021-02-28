@@ -30,9 +30,10 @@ public class PlayerOpMode extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);                   // counts per revolution over circumference
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
-    static final double     REST_POSITION           = 0;
-    static final double     HOLD_POSITION           = 1288;
-    static final double     GRAB_POSITION           = 4288;
+    static final int     REST_POSITION           = 0;
+    static final int     HOLD_POSITION           = 1600;
+    static final int     TEMP_POSITION           = 5000;
+    static final int     GRAB_POSITION           = 5800;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -43,18 +44,43 @@ public class PlayerOpMode extends LinearOpMode {
         leftMotor = hardwareMap.get(DcMotor.class, "motor1");
         rightMotor = hardwareMap.get(DcMotor.class, "motor2");
         armMotor = hardwareMap.get(DcMotor.class, "motor0");
-//        handServo = hardwareMap.get(Servo.class, "servo0");
+        handServo = hardwareMap.get(Servo.class, "servo0");
+
+        leftMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         waitForStart();
         time.reset();
 
+        boolean open = false;
+
         while (opModeIsActive()) {
             speedEncoder(-gamepad1.left_stick_y, gamepad1.right_stick_x);
-            if(gamepad1.a){
-                moveByRotation(TURN_SPEED*10, armMotor, .25, 10);
+
+            if (gamepad1.dpad_left) {
+                toRest();
             }
-            else if(gamepad1.b){
-                moveByRotation(TURN_SPEED*10, armMotor, -.25, 10);
+            if (gamepad1.dpad_up) {
+                toHold();
+            }
+            if (gamepad1.dpad_right) {
+                toTemp();
+            }
+            if (gamepad1.dpad_down){
+                toGrab();
+            }
+            if (gamepad1.b) {
+                grab(false);
+            } else if (gamepad1.a) {
+                grab(true);
+            }
+            if (gamepad1.left_bumper) {
+                moveByRotation(.5, armMotor, -1);
+            } else if (gamepad1.right_bumper) {
+                moveByRotation(.5, armMotor, 1);
+            }
+            if (gamepad1.x) {
+                //Set m position to 0
             }
         }
 
@@ -62,7 +88,8 @@ public class PlayerOpMode extends LinearOpMode {
 
     }
 
-    public void moveByRotation(double speed, DcMotor motor, double rotations, double timeoutS){
+
+    public void moveByRotation(double speed, DcMotor motor, double rotations){
         int target;
 
         if (opModeIsActive()){
@@ -94,9 +121,10 @@ public class PlayerOpMode extends LinearOpMode {
 
     public void moveServo(Servo servo, double openClose){
         servo.setPosition(openClose);
+        telemetry.addData(servo.toString(), "running to " , openClose);
     }
 
-    public void moveToPosition(DcMotor motor, double speed, int toPosition, double timeoutS){
+    public void moveToPosition( double speed, DcMotor motor, int toPosition){
         if(opModeIsActive()){
             motor.setTargetPosition(toPosition);
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -105,12 +133,12 @@ public class PlayerOpMode extends LinearOpMode {
             motor.setPower(Math.abs(speed));
 
             while (opModeIsActive() &&
-                    (time.seconds() < timeoutS) &&
-                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+                    (motor.isBusy()) &&
+                    Math.abs(armMotor.getTargetPosition() - armMotor.getCurrentPosition()) > 20) {
 
                 // Display it for the driver.
-                telemetry.addData("armP1",  "Running to %7d", toPosition);
-                telemetry.addData("armP2",  "Running at %7d", motor.getCurrentPosition());
+                telemetry.addData(motor.getDeviceName(),  "Running to %7d", toPosition);
+                telemetry.addData(motor.getDeviceName(),  "Running at %7d", motor.getCurrentPosition());
                 telemetry.update();
             }
 
@@ -120,6 +148,26 @@ public class PlayerOpMode extends LinearOpMode {
         }
     }
 
+    public void toRest(){
+        moveToPosition(.3, armMotor, REST_POSITION);
+    }
+
+    public void toHold(){
+        moveToPosition(.3 , armMotor, HOLD_POSITION);
+    }
+
+    public void toGrab(){
+        moveToPosition(.3, armMotor, GRAB_POSITION);
+    }
+
+    private void toTemp() {
+        moveToPosition(.3, armMotor, TEMP_POSITION);
+    }
+
+    public void grab(boolean open){
+        if(!open) moveServo(handServo, .19);
+        else moveServo(handServo , .90);
+    }
 
 
     public void speedEncoder(double x, double y){
@@ -130,16 +178,16 @@ public class PlayerOpMode extends LinearOpMode {
         leftMotor.setPower(leftPower);
         rightMotor.setPower(rightPower);
 
-//        telemetry.addData("Status", "Run Time: " + time.toString());
-//        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-//        telemetry.update();
+        //telemetry.addData("Status", "Run Time: " + time.toString());
+        //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        //telemetry.update();
     }
 
     public void arm(double power){
         armMotor.setPower(power);
 
-        telemetry.addData("Status", "Run Time: " + time.toString());
-        telemetry.addData("Motors", "arm (%.2f)", power);
-        telemetry.update();
+        //telemetry.addData("Status", "Run Time: " + time.toString());
+        //telemetry.addData("Motors", "arm (%.2f)", power);
+        //telemetry.update();
     }
 }

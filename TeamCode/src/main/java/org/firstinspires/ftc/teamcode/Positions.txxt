@@ -1,0 +1,19 @@
+              (Right , Forward)
+1st Pickup - (0, 1)
+
+(when turning tutn 90 but then back to face the front again)
+Target A) (1 , 5)
+Target B) ( -1 , 7)
+Target C) (1 , 9)
+
+(
+IF SECOND
+Flip 180
+
+Target A) (-2 , -5)
+)
+
+move to white line:
+A) Nothing
+B) Flip, (0, 2)
+C) Flip, (0, 4)
