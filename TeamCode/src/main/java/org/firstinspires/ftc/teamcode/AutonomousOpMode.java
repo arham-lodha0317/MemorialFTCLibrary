@@ -111,9 +111,12 @@ public class AutonomousOpMode extends LinearOpMode {
 //
 //            }
 
-            motor.setPower(0);
+            motor1.setPower(0);
+            motor2.setPower(0);
+            motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         }
     }
 
