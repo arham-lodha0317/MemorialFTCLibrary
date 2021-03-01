@@ -23,16 +23,19 @@ public class AutonomousOpMode extends LinearOpMode {
 
     private ElapsedTime time = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_MOTOR_REV    = 1440;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
+    static final double     WHEEL_DIAMETER_FEET     = WHEEL_DIAMETER_INCHES/12.0;
+    static final double     COUNTS_PER_FOOT         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_FEET * 3.1415)
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);                   // counts per revolution over circumference
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
-    static final double     REST_POSITION           = 0;
-    static final double     HOLD_POSITION           = 1288;
-    static final double     GRAB_POSITION           = 4288;
+    static final int     REST_POSITION           = 0;
+    static final int     HOLD_POSITION           = 1600;
+    static final int     TEMP_POSITION           = 5000;
+    static final int     GRAB_POSITION           = 5800;
 
 
     @Override
@@ -47,18 +50,74 @@ public class AutonomousOpMode extends LinearOpMode {
         // spin arm 1/2 way
         while (opModeIsActive()) {
 //            moveByRotation(TURN_SPEED, armMotor, 1, 10.0);
-            moveByRotation(TURN_SPEED, armMotor, -1, 10.0);
+            moveByRotation(TURN_SPEED, armMotor, -1);
+            moveByFeet(TURN_SPEED, leftMotor, rightMotor, 4);
+
+
             break;
         }
         //encoderDrive();
 
     }
 
+    public void toRest(){
+        moveToPosition(.3, armMotor, REST_POSITION);
+    }
+
+    public void toHold(){
+        moveToPosition(.3 , armMotor, HOLD_POSITION);
+    }
+
+    public void toGrab(){
+        moveToPosition(.3, armMotor, GRAB_POSITION);
+    }
+
+    private void toTemp() {
+        moveToPosition(.3, armMotor, TEMP_POSITION);
+    }
+
     public void moveServo(Servo servo, double openClose){
         servo.setPosition(openClose);
     }
 
-    public void moveByRotation(double speed, DcMotor motor, double rotations, double timeoutS){
+    public void moveByFeet(double speed, DcMotor motor1, DcMotor motor2, double feet){
+        int target1, target2;
+
+        if (opModeIsActive()){
+            target1 = motor1.getCurrentPosition() + (int)(feet * COUNTS_PER_FOOT);
+            motor1.setTargetPosition(target1);
+
+            motor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            target2 = motor2.getCurrentPosition() + (int)(feet * COUNTS_PER_FOOT);
+            motor2.setTargetPosition(target2);
+
+            motor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            time.reset();
+            motor1.setPower(Math.abs(speed));
+            motor2.setPower(Math.abs(speed));
+
+            telemetry.addData("wheel1",  "Running to %7d", target1);
+            telemetry.addData("wheel2",  "Running to %7d", target2);
+            telemetry.addData("wheel1",  "Running at %7d", motor1.getCurrentPosition());
+            telemetry.addData("wheel2",  "Running at %7d", motor2.getCurrentPosition());
+            telemetry.update();
+
+//            while (opModeIsActive() &&
+//                    (time.seconds() < timeoutS) &&
+//                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+//
+//                // Display it for the driver.
+//
+//            }
+
+            motor.setPower(0);
+
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    public void moveByRotation(double speed, DcMotor motor, double rotations){
         int target;
 
         if (opModeIsActive()){
@@ -70,15 +129,17 @@ public class AutonomousOpMode extends LinearOpMode {
             time.reset();
             motor.setPower(Math.abs(speed));
 
-            while (opModeIsActive() &&
-                    (time.seconds() < timeoutS) &&
-                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+            telemetry.addData("armP1",  "Running to %7d", target);
+            telemetry.addData("armP2",  "Running at %7d", motor.getCurrentPosition());
+            telemetry.update();
 
-                // Display it for the driver.
-                telemetry.addData("armP1",  "Running to %7d", target);
-                telemetry.addData("armP2",  "Running at %7d", motor.getCurrentPosition());
-                telemetry.update();
-            }
+//            while (opModeIsActive() &&
+//                    (time.seconds() < timeoutS) &&
+//                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+//
+//                // Display it for the driver.
+//
+//            }
 
             motor.setPower(0);
 
@@ -86,7 +147,7 @@ public class AutonomousOpMode extends LinearOpMode {
         }
     }
 
-    public void moveToPosition(DcMotor motor, double speed, int toPosition, double timeoutS){
+    public void moveToPosition( double speed, DcMotor motor, int toPosition){
         if(opModeIsActive()){
             motor.setTargetPosition(toPosition);
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -95,12 +156,12 @@ public class AutonomousOpMode extends LinearOpMode {
             motor.setPower(Math.abs(speed));
 
             while (opModeIsActive() &&
-                    (time.seconds() < timeoutS) &&
-                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+                    (motor.isBusy()) &&
+                    Math.abs(armMotor.getTargetPosition() - armMotor.getCurrentPosition()) > 20) {
 
                 // Display it for the driver.
-                telemetry.addData("armP1",  "Running to %7d", toPosition);
-                telemetry.addData("armP2",  "Running at %7d", motor.getCurrentPosition());
+                telemetry.addData(motor.getDeviceName(),  "Running to %7d", toPosition);
+                telemetry.addData(motor.getDeviceName(),  "Running at %7d", motor.getCurrentPosition());
                 telemetry.update();
             }
 
