@@ -47,16 +47,8 @@ public class AutonomousOpMode extends LinearOpMode {
 
         //start of autonomous period
         waitForStart();
-        // spin arm 1/2 way
-        while (opModeIsActive()) {
-//            moveByRotation(TURN_SPEED, armMotor, 1, 10.0);
-            moveByRotation(TURN_SPEED, armMotor, -1);
-            moveByFeet(TURN_SPEED, leftMotor, rightMotor, 4);
+        encoderDrive(.3, 1, 0, 10); //forward 1 right 0
 
-
-            break;
-        }
-        //encoderDrive();
 
     }
 
@@ -175,7 +167,7 @@ public class AutonomousOpMode extends LinearOpMode {
     }
 
     public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
+                             double leftFeet, double rightFeet,
                              double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
@@ -184,8 +176,8 @@ public class AutonomousOpMode extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = leftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = rightMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftTarget = leftMotor.getCurrentPosition() + (int)(leftFeet * COUNTS_PER_INCH * 12);
+            newRightTarget = rightMotor.getCurrentPosition() + (int)(rightFeet * COUNTS_PER_INCH * 12);
             leftMotor.setTargetPosition(newLeftTarget);
             rightMotor.setTargetPosition(newRightTarget);
 
