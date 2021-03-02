@@ -47,7 +47,9 @@ public class AutonomousOpMode extends LinearOpMode {
 
         //start of autonomous period
         waitForStart();
+        toGrab();
         encoderDrive(.3, 1, 0, 10); //forward 1 right 0
+
 
 
     }
@@ -67,6 +69,12 @@ public class AutonomousOpMode extends LinearOpMode {
     private void toTemp() {
         moveToPosition(.3, armMotor, TEMP_POSITION);
     }
+
+    public void grab(boolean open){
+        if(!open) moveServo(handServo, .19);
+        else moveServo(handServo , .90);
+    }
+
 
     public void moveServo(Servo servo, double openClose){
         servo.setPosition(openClose);
