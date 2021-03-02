@@ -1,17 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="AutonomousA", group="Memorial")
 
-public class AutonomousOpModeA extends LinearOpMode {
+public class AutonomousOpModeB extends LinearOpMode {
     private DcMotor leftMotor;
     private DcMotor rightMotor;
     private DcMotor armMotor; // gear ratio is 6 : 1
@@ -54,7 +49,7 @@ public class AutonomousOpModeA extends LinearOpMode {
         grab(true);
         toTemp();
 
-        encoderDrive(.3, 5, 1, 10); //forward 5 right 1
+        encoderDrive(.3, 5, 1, 10);
         toGrab();
         grab(false);
         toHold();
