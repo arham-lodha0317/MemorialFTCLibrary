@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Autonomous", group="Memorial")
+@Autonomous(name="AutonomousA", group="Memorial")
 
-public class AutonomousOpMode extends LinearOpMode {
+public class AutonomousOpModeA extends LinearOpMode {
     private DcMotor leftMotor;
     private DcMotor rightMotor;
     private DcMotor armMotor; // gear ratio is 6 : 1
@@ -47,8 +47,20 @@ public class AutonomousOpMode extends LinearOpMode {
 
         //start of autonomous period
         waitForStart();
+
+
         toGrab();
         encoderDrive(.3, 1, 0, 10); //forward 1 right 0
+        grab(true);
+        toTemp();
+
+        encoderDrive(.3, 5, 1, 10);
+        toGrab();
+        grab(false);
+        toHold();
+        grab(true);
+        toRest();
+
 
 
 
@@ -71,7 +83,7 @@ public class AutonomousOpMode extends LinearOpMode {
     }
 
     public void grab(boolean open){
-        if(!open) moveServo(handServo, .19);
+        if(open) moveServo(handServo, .19);
         else moveServo(handServo , .90);
     }
 
