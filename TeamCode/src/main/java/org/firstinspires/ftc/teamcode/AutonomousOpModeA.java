@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.sql.Driver;
+
 @Autonomous(name="AutonomousA", group="Memorial")
 
 public class AutonomousOpModeA extends LinearOpMode {
@@ -31,7 +33,7 @@ public class AutonomousOpModeA extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);                   // counts per revolution over circumference
     static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
+    static final double     TURN_SPEED              = 0.2;
     static final int     REST_POSITION           = 0;
     static final int     HOLD_POSITION           = 1600;
     static final int     TEMP_POSITION           = 5000;
@@ -45,21 +47,46 @@ public class AutonomousOpModeA extends LinearOpMode {
         armMotor = hardwareMap.get(DcMotor.class, "motor0");
         handServo = hardwareMap.get(Servo.class, "servo0");
 
+        leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         //start of autonomous period
         waitForStart();
 
-
-        toGrab();
-        encoderDrive(.3, 1, 0, 10); //forward 1 right 0
-        grab(true);
-        toTemp();
-
-        encoderDrive(.3, 5, 1, 10); //forward 5 right 1
-        toGrab();
-        grab(false);
         toHold();
         grab(true);
+        //sleep(1000);
+        toGrab();
+        encoderDrive(DRIVE_SPEED, .75 , .75, 10); //forward 1 right 0
+        grab(false);
+        sleep(1000);
+
+        toTemp();
+        sleep(1000);
+        encoderDrive(DRIVE_SPEED, 4.75, 4.75, 10);
+        encoderDrive(TURN_SPEED, -.3, .3, 10);
+        encoderDrive(DRIVE_SPEED, .5, .5, 10);
+        toGrab();
+        sleep(1000);
+        grab(true);
+        sleep(1000);
+        toTemp();
+        grab(false);
+        sleep(500);
+
+
+
+
         toRest();
+        //        encoderDrive(TURN_SPEED, 5, 1, 10); //forward 5 right 1
+//        toGrab();
+//        grab(false);
+//        toHold();
+//        grab(true);
+//        toRest();
 
 
 
@@ -83,7 +110,7 @@ public class AutonomousOpModeA extends LinearOpMode {
     }
 
     public void grab(boolean open){
-        if(open) moveServo(handServo, .19);
+        if(!open) moveServo(handServo, .19);
         else moveServo(handServo , .90);
     }
 

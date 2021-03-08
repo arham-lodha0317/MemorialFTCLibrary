@@ -55,7 +55,7 @@ public class PlayerOpMode extends LinearOpMode {
         boolean open = false;
 
         while (opModeIsActive()) {
-            speedEncoder(-gamepad1.left_stick_y, gamepad1.right_stick_x);
+            speedEncoder(gamepad1.right_stick_x, -gamepad1.left_stick_y);
 
             if (gamepad1.dpad_left) {
                 toRest();
@@ -80,7 +80,7 @@ public class PlayerOpMode extends LinearOpMode {
                 moveByRotation(.5, armMotor, 1);
             }
             if (gamepad1.x) {
-                //Set m position to 0
+                armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
         }
     }
@@ -145,19 +145,19 @@ public class PlayerOpMode extends LinearOpMode {
     }
 
     public void toRest(){
-        moveToPosition(.3, armMotor, REST_POSITION);
+        moveToPosition(.2, armMotor, REST_POSITION);
     }
 
     public void toHold(){
-        moveToPosition(.3 , armMotor, HOLD_POSITION);
+        moveToPosition(.2 , armMotor, HOLD_POSITION);
     }
 
     public void toGrab(){
-        moveToPosition(.3, armMotor, GRAB_POSITION);
+        moveToPosition(.2, armMotor, GRAB_POSITION);
     }
 
     private void toTemp() {
-        moveToPosition(.3, armMotor, TEMP_POSITION);
+        moveToPosition(.2, armMotor, TEMP_POSITION);
     }
 
     public void grab(boolean open){
