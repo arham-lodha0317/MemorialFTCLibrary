@@ -28,8 +28,6 @@ public class PlayerOpMode extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);                   // counts per revolution over circumference
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
     static final int     REST_POSITION           = 0;
     static final int     HOLD_POSITION           = 1600;
     static final int     TEMP_POSITION           = 5000;
@@ -52,10 +50,10 @@ public class PlayerOpMode extends LinearOpMode {
         waitForStart();
         time.reset();
 
-        boolean open = false;
-
         while (opModeIsActive()) {
-            speedEncoder(-gamepad1.left_stick_y, gamepad1.right_stick_x);
+
+
+            speedEncoder(gamepad1.right_stick_x, -gamepad1.left_stick_y);
 
             if (gamepad1.dpad_left) {
                 toRest();
@@ -75,13 +73,19 @@ public class PlayerOpMode extends LinearOpMode {
                 grab(true);
             }
             if (gamepad1.left_bumper) {
-                moveByRotation(.5, armMotor, -1);
+                moveToPosition(.25, armMotor, armMotor.getCurrentPosition()-25);
             } else if (gamepad1.right_bumper) {
-                moveByRotation(.5, armMotor, 1);
+                moveToPosition(.25, armMotor, armMotor.getCurrentPosition()+25);
             }
             if (gamepad1.x) {
                 //Set m position to 0
             }
+
+//            telemetry.addData(armMotor.getDeviceName(),  "Running to %7d", armMotor.getTargetPosition());
+//            telemetry.addData(armMotor.getDeviceName(),  "Running at %7d", armMotor.getCurrentPosition());
+//            telemetry.update();
+
+
         }
     }
 
@@ -97,9 +101,9 @@ public class PlayerOpMode extends LinearOpMode {
             time.reset();
             motor.setPower(Math.abs(speed));
 
-            telemetry.addData("armP1",  "Running to %7d", target);
-            telemetry.addData("armP2",  "Running at %7d", motor.getCurrentPosition());
-            telemetry.update();
+//            telemetry.addData("armP1",  "Running to %7d", target);
+//            telemetry.addData("armP2",  "Running at %7d", motor.getCurrentPosition());
+//            telemetry.update();
 
 //            while (opModeIsActive() &&
 //                    (time.seconds() < timeoutS) &&
@@ -111,7 +115,6 @@ public class PlayerOpMode extends LinearOpMode {
 
             motor.setPower(0);
 
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 
@@ -128,19 +131,23 @@ public class PlayerOpMode extends LinearOpMode {
             time.reset();
             motor.setPower(Math.abs(speed));
 
-            while (opModeIsActive() &&
-                    (motor.isBusy()) &&
-                    Math.abs(armMotor.getTargetPosition() - armMotor.getCurrentPosition()) > 20) {
+//            while (opModeIsActive() &&
+//                    (motor.isBusy()) &&
+//                    Math.abs(armMotor.getTargetPosition() - armMotor.getCurrentPosition()) > 20) {
+//
+//                // Display it for the driver.
+//                telemetry.addData(motor.getDeviceName(),  "Running to %7d", toPosition);
+//                telemetry.addData(motor.getDeviceName(),  "Running at %7d", motor.getCurrentPosition());
+//                telemetry.update();
+//            }
 
-                // Display it for the driver.
-                telemetry.addData(motor.getDeviceName(),  "Running to %7d", toPosition);
-                telemetry.addData(motor.getDeviceName(),  "Running at %7d", motor.getCurrentPosition());
-                telemetry.update();
-            }
+            telemetry.addData(motor.getDeviceName(),  "Running to %7d", toPosition);
+            telemetry.addData(motor.getDeviceName(),  "Running at %7d", motor.getCurrentPosition());
+            telemetry.update();
 
             motor.setPower(0);
 
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 
@@ -173,9 +180,5 @@ public class PlayerOpMode extends LinearOpMode {
 
         leftMotor.setPower(leftPower);
         rightMotor.setPower(rightPower);
-
-        telemetry.addData("Status", "Run Time: " + time.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-        telemetry.update();
     }
 }

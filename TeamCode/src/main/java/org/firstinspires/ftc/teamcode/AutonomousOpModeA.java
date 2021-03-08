@@ -45,16 +45,27 @@ public class AutonomousOpModeA extends LinearOpMode {
         armMotor = hardwareMap.get(DcMotor.class, "motor0");
         handServo = hardwareMap.get(Servo.class, "servo0");
 
+        leftMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         //start of autonomous period
         waitForStart();
 
 
         toGrab();
-        encoderDrive(.3, 1, 0, 10); //forward 1 right 0
         grab(true);
+        sleep(1000);     // pause for servos to move
+        encoderDrive(.3, 1, 1, 10);
+        grab(false);
         toTemp();
 
-        encoderDrive(.3, 5, 1, 10); //forward 5 right 1
+        encoderDrive(.3, 5, 5, 10); //forward 5 right 1
         toGrab();
         grab(false);
         toHold();
