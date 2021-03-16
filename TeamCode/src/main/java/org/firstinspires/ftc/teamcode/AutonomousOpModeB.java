@@ -67,9 +67,6 @@ public class AutonomousOpModeB extends LinearOpMode {
         encoderDrive(TURN_SPEED, .07,-.07,10);
         encoderDrive(DRIVE_SPEED, 6.75, 6.75, 10);
         sleep(100);
-        //encoderDrive(TURN_SPEED, -.3, .3, 10);
-//        sleep(100);
-//        encoderDrive(DRIVE_SPEED, .8, .8, 10);
         toGrab();
         sleep(200);
         grab(true);
