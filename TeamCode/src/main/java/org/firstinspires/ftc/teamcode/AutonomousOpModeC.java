@@ -2,18 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.sql.Driver;
+@Autonomous(name="AutonomousC", group="Memorial")
 
-@Autonomous(name="AutonomousA", group="Memorial")
-
-public class AutonomousOpModeA extends LinearOpMode {
+public class AutonomousOpModeC extends LinearOpMode {
     private DcMotor leftMotor;
     private DcMotor rightMotor;
     private DcMotor armMotor; // gear ratio is 6 : 1
@@ -33,7 +29,7 @@ public class AutonomousOpModeA extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);                   // counts per revolution over circumference
     static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.2;
+    static final double     TURN_SPEED              = 0.3;
     static final int     REST_POSITION           = 0;
     static final int     HOLD_POSITION           = 1600;
     static final int     TEMP_POSITION           = 5000;
@@ -60,23 +56,29 @@ public class AutonomousOpModeA extends LinearOpMode {
         grab(true);
         //sleep(1000);
         toGrab();
-        encoderDrive(DRIVE_SPEED, .8 , .8, 10); //forward 1 right 0
-        grab(false);
-        sleep(1000);
-
-        toTemp();
-        sleep(1000);
-        encoderDrive(DRIVE_SPEED, 4.5, 4.5, 10);
-        encoderDrive(TURN_SPEED, -.3, .3, 10);
-        encoderDrive(DRIVE_SPEED, .6, .6, 10);
-        toGrab();
-        sleep(1000);
-        grab(true);
-        sleep(1000);
-        toTemp();
+        encoderDrive(DRIVE_SPEED-.2, .9 , .9, 10); //forward 1 right 0
+        sleep(250);
         grab(false);
         sleep(500);
-        encoderDrive(DRIVE_SPEED, -.6, -.6, 10);
+
+        toTemp();
+        sleep(250);
+        encoderDrive(TURN_SPEED, -.07,.07,10);
+        encoderDrive(DRIVE_SPEED, 8.75, 8.75, 10);
+        sleep(100);
+        //encoderDrive(TURN_SPEED, -.3, .3, 10);
+//        sleep(100);
+//        encoderDrive(DRIVE_SPEED, .8, .8, 10);
+        toGrab();
+        sleep(200);
+        grab(true);
+        sleep(200);
+        toTemp();
+        grab(false);
+        sleep(100);
+        encoderDrive(DRIVE_SPEED, -4.25, -4.25, 10);
+//        encoderDrive(TURN_SPEED + .2, .3, -.3, 10);
+
 
 
 
