@@ -60,22 +60,22 @@ public class PlayerOpMode extends LinearOpMode {
             speedEncoder(gamepad1.right_stick_x * mul, -gamepad1.left_stick_y * mul);
 
             if (gamepad1.left_trigger > .8) {
-                if (System.currentTimeMillis() - time < 250) {
+                if (System.currentTimeMillis() - time > 250) {
                     time = System.currentTimeMillis();
                     if (mul > .25){
                         mul -= .25;
                     }
                 }
-                telemetry.addData("Speed setting: ", "%d %", mul);
+                telemetry.addData("Speed setting: ", "%d", mul);
                 telemetry.update();
             } else if (gamepad1.right_trigger > .8) {
-                if (System.currentTimeMillis() - time < 250) {
+                if (System.currentTimeMillis() - time > 250) {
                     time = System.currentTimeMillis();
-                    if (mul < 1.5){
+                    if (mul < 1.0){
                         mul += .25;
                     }
                 }
-                telemetry.addData("Speed setting: ", "%d %", mul);
+                telemetry.addData("Speed setting: ", "%d", mul);
                 telemetry.update();
             }
 
